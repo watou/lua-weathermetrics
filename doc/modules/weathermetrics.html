@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>weathermetrics: Module Index</title>
+    <link rel="stylesheet" href="../luadoc.css" type="text/css" />
+    <!--meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/-->
+</head>
+
+<body>
+<div id="container">
+
+<div id="product">
+    <div id="product_logo"></div>
+    <div id="product_name"><big><b></b></big></div>
+    <div id="product_description"></div>
+</div> <!-- id="product" -->
+
+<div id="main">
+
+<div id="navigation">
+
+
+<h1>LuaDoc</h1>
+<ul>
+	
+	<li><a href="../index.html">Index</a></li>
+	
+</ul>
+
+
+<!-- Module list -->
+
+<h1>Modules</h1>
+<ul>
+
+	<li><strong>weathermetrics</strong></li>
+	
+</ul>
+
+
+
+<!-- File list -->
+
+
+
+
+
+
+</div><!-- id="navigation" -->
+
+<div id="content">
+
+<h1>Module <code>weathermetrics</code></h1>
+
+<p>weathermetrics module for Lua 5.1.  weathermetrics includes functions to calculate dew point temperature, relative humidity, and heat index and to convert between Celsius and Fahrenheit. All functions are based on equations and algorithms used by the United States National Weather Service. License: MIT</p>
+
+<p><b>Authors:</b>
+<table class="authors_list">
+
+    <tr><td class="name">Brooke Anderson</td></tr>
+
+    <tr><td class="name">Roger Peng</td></tr>
+
+    <tr><td class="name">Ported to Lua by John W. Cocula</td></tr>
+
+</table>
+</p>
+
+
+
+<p><small><b>Release:</b> 1.0</small></p>
+
+
+
+<h2>Functions</h2>
+<table class="function_list">
+
+    <tr>
+    <td class="name" nowrap><a href="#celsius_to_fahrenheit">celsius_to_fahrenheit</a>&nbsp;(celsius, digits)</td>
+    <td class="summary">Convert from Celsius to Fahrenheit.</td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#dewpoint_to_humidity">dewpoint_to_humidity</a>&nbsp;(dp, t, temperature_metric)</td>
+    <td class="summary">Create a relative humidity value from air temperature and dew point temperature values.</td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#fahrenheit_to_celsius">fahrenheit_to_celsius</a>&nbsp;(fahrenheit, digits)</td>
+    <td class="summary">Convert from Fahrenheit to Celsius.</td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#heat_index">heat_index</a>&nbsp;(t, dp, rh, temperature_metric, output_metric, digits)</td>
+    <td class="summary">Calculate heat index.</td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#humidity_to_dewpoint">humidity_to_dewpoint</a>&nbsp;(t, rh, temperature_metric)</td>
+    <td class="summary">Calculate dew point temperature.</td>
+    </tr>
+
+    <tr>
+    <td class="name" nowrap><a href="#round">round</a>&nbsp;(value, digits)</td>
+    <td class="summary">Round a numeric value to the specified number of digits.</td>
+    </tr>
+
+</table>
+
+
+
+
+
+
+<br/>
+<br/>
+
+
+
+<h2><a name="functions"></a>Functions</h2>
+<dl class="function">
+
+
+
+<dt><a name="celsius_to_fahrenheit"></a><strong>celsius_to_fahrenheit</strong>&nbsp;(celsius, digits)</dt>
+<dd>
+Convert from Celsius to Fahrenheit. Create a temperature in Fahrenheit from a temperature in Celsius. Equations are from the source code for the <a href="http://www.hpc.ncep.noaa.gov/html/heatindex.shtml">US National Weather Service's online heat index calculator</a>.
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  celsius: a temperature value in Celsius
+	</li>
+	
+	<li>
+	  digits: number of digits to round converted value (defaults to 2)
+	</li>
+	
+</ul>
+
+
+
+
+<h3>Usage:</h3>
+celsius_to_fahrenheit(celsius, digits)
+
+
+
+<h3>Return value:</h3>
+a temperature in Fahrenheit from a temperature in Celsius
+
+
+
+<h3>See also:</h3>
+<ul>
+	
+	<li><a href="../modules/weathermetrics.html#fahrenheit_to_celsius">
+		fahrenheit_to_celsius
+	</a>
+	
+</ul>
+
+</dd>
+
+
+
+
+<dt><a name="dewpoint_to_humidity"></a><strong>dewpoint_to_humidity</strong>&nbsp;(dp, t, temperature_metric)</dt>
+<dd>
+Create a relative humidity value from air temperature and dew point temperature values. Dew point temperature and temperature must be in the same metric (i.e., either both in Celsius or both in Fahrenheit). If necessary, use <code>fahrenheit_to_celsius</code> or <code>celsius_to_fahrenheit</code> to convert before using this function. Equations are from the source code for the <a href="http://www.hpc.ncep.noaa.gov/html/heatindex.shtml">US National Weather Service's online heat index calculator</a>.
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  dp: dew point temperature
+	</li>
+	
+	<li>
+	  t: air temperature
+	</li>
+	
+	<li>
+	  temperature_metric: temperature metric for both air temperature and dew point temperature, possible values: <code>FAHRENHEIT</code> or <code>CELSIUS</code> (defaults to <code>FAHRENHEIT</code>)
+	</li>
+	
+</ul>
+
+
+
+
+<h3>Usage:</h3>
+dewpoint_to_humidity(dp, t, temperature_metric)
+
+
+
+<h3>Return values:</h3>
+<ol>
+	
+	<li>relative humidity (in %)
+	
+	<li>if the first return value is <code>nil</code>, the second return value contains a message explaining why
+	
+</ol>
+
+
+
+<h3>See also:</h3>
+<ul>
+	
+	<li><a href="../modules/weathermetrics.html#fahrenheit_to_celsius">
+		fahrenheit_to_celsius
+	</a>
+	
+	<li><a href="../modules/weathermetrics.html#celsius_to_fahrenheit">
+		celsius_to_fahrenheit
+	</a>
+	
+	<li><a href="../modules/weathermetrics.html#humidity_to_dewpoint">
+		humidity_to_dewpoint
+	</a>
+	
+</ul>
+
+</dd>
+
+
+
+
+<dt><a name="fahrenheit_to_celsius"></a><strong>fahrenheit_to_celsius</strong>&nbsp;(fahrenheit, digits)</dt>
+<dd>
+Convert from Fahrenheit to Celsius. Create a temperature in Celsius from a temperature in Fahrenheit. Equations are from the source code for the <a href="http://www.hpc.ncep.noaa.gov/html/heatindex.shtml">US National Weather Service's online heat index calculator</a>.
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  fahrenheit: a temperature value in Fahrenheit
+	</li>
+	
+	<li>
+	  digits: number of digits to round converted value (defaults to 2)
+	</li>
+	
+</ul>
+
+
+
+
+<h3>Usage:</h3>
+fahrenheit_to_celsius(fahrenheit, round)
+
+
+
+<h3>Return value:</h3>
+a temperature in Celsius from a temperature in Fahrenheit
+
+
+
+<h3>See also:</h3>
+<ul>
+	
+	<li><a href="../modules/weathermetrics.html#celsius_to_fahrenheit">
+		celsius_to_fahrenheit
+	</a>
+	
+</ul>
+
+</dd>
+
+
+
+
+<dt><a name="heat_index"></a><strong>heat_index</strong>&nbsp;(t, dp, rh, temperature_metric, output_metric, digits)</dt>
+<dd>
+Calculate heat index. Create a heat index value from air temperature and either relative humidity or dew point temperature values. Include air temperature <code>t</code>  and either dew point temperature <code>dp</code>  or relative humdity <code>rh</code> . You cannot specify both dew point temperature and relative humidity- this will return an error. Heat index is calculated as nil when impossible values of dew point temperature or humidity are inputted (e.g., humidity above 100% or below 0%, dew point temperature above air temperature).
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  t: air temperature
+	</li>
+	
+	<li>
+	  dp: dew point temperature
+	</li>
+	
+	<li>
+	  rh: relative humidity (in %)
+	</li>
+	
+	<li>
+	  temperature_metric: temperature metric for air temperature and, if you're using it, dew point temperature; value can be either <code>FAHRENHEIT</code> or <code>CELSIUS</code>
+	</li>
+	
+	<li>
+	  output_metric: metric heat index should be calculated in, either <code>FAHRENHEIT</code> or <code>CELSIUS</code>
+	</li>
+	
+	<li>
+	  digits: the number of digits to round the heat index to
+	</li>
+	
+</ul>
+
+
+
+
+<h3>Usage:</h3>
+heat.index(t, dp, rh, temperature_metric, output_metric, round)
+
+
+
+<h3>Return values:</h3>
+<ol>
+	
+	<li>A heat index value in the metric specified by <code>output_metric</code> (if <code>output_metric</code> is not specified, heat index will be returned in the same metric in which air temperature was input, specified by <code>temperature_metric</code>)
+	
+	<li>if the heat index value is <code>nil</code>, the second return value will be a message explaining why.
+	
+</ol>
+
+
+
+</dd>
+
+
+
+
+<dt><a name="humidity_to_dewpoint"></a><strong>humidity_to_dewpoint</strong>&nbsp;(t, rh, temperature_metric)</dt>
+<dd>
+Calculate dew point temperature. Create a dew point temperature from air temperature and relative humidity. Dew point temperature will be calculated in the same metric as the temperature (as specified by the <code>temperature_metric</code> option). If you'd like dew point temperature in a different metric, use the function <code>celsius_to_fahrenheit</code> or <code>fahrenheit_to_celsius</code> on the output from this function.
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  t: air temperature
+	</li>
+	
+	<li>
+	  rh: vector of relative humidity (in %)
+	</li>
+	
+	<li>
+	  temperature_metric: temperature metric for air temperature, either <code>FAHRENHEIT</code> or <code>CELSIUS</code> (defaults to <code>FAHRENHEIT</code>)
+	</li>
+	
+</ul>
+
+
+
+
+<h3>Usage:</h3>
+humidity_to_dewpoint(t, rh, temperature_metric)
+
+
+
+<h3>Return values:</h3>
+<ol>
+	
+	<li>the dew point temperatre
+	
+	<li>if the first return value is <code>nil</code>, the second return value contains a message explaining why.
+	
+</ol>
+
+
+
+<h3>See also:</h3>
+<ul>
+	
+	<li><a href="../modules/weathermetrics.html#fahrenheit_to_celsius">
+		fahrenheit_to_celsius
+	</a>
+	
+	<li><a href="../modules/weathermetrics.html#celsius_to_fahrenheit">
+		celsius_to_fahrenheit
+	</a>
+	
+</ul>
+
+</dd>
+
+
+
+
+<dt><a name="round"></a><strong>round</strong>&nbsp;(value, digits)</dt>
+<dd>
+Round a numeric value to the specified number of digits.
+
+
+<h3>Parameters</h3>
+<ul>
+	
+	<li>
+	  value: the value to round
+	</li>
+	
+	<li>
+	  digits: the number of digits to preserve
+	</li>
+	
+</ul>
+
+
+
+
+<h3>Usage:</h3>
+round(value, digits)
+
+
+
+<h3>Return value:</h3>
+the rounded value
+
+
+
+</dd>
+
+
+</dl>
+
+
+
+
+
+
+</div> <!-- id="content" -->
+
+</div> <!-- id="main" -->
+
+<div id="about">
+    <p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
+</div> <!-- id="about" -->
+
+</div> <!-- id="container" -->
+</body>
+</html>

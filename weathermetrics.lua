@@ -1,7 +1,29 @@
-module(..., package.seeall);
+--- weathermetrics module for Lua 5.1.
+-- 
+-- weathermetrics includes functions to calculate dew point
+-- temperature, relative humidity, and heat index and to convert
+-- between Celsius and Fahrenheit. All functions are based on
+-- equations and algorithms used by the United States National
+-- Weather Service.
+-- License: MIT
+-- @author Brooke Anderson
+-- @author Roger Peng
+-- @author Ported to Lua by John W. Cocula
+-- @release 1.0
+
+module("weathermetrics", package.seeall);
+
+
 
 FAHRENHEIT = "F"
 CELSIUS = "C"
+
+----------------------------------------------------------------------------
+-- Round a numeric value to the specified number of digits.
+-- @usage round(value, digits)
+-- @param value the value to round
+-- @param digits the number of digits to preserve
+-- @return the rounded value
 
 function round(value, digits)
   local precision = 10^digits
@@ -9,34 +31,44 @@ function round(value, digits)
       (math.floor(value * precision + 0.5) / precision) or
       (math.ceil(value * precision - 0.5) / precision)
 end
-    
---- Convert from Celsius to Fahrenheit.
+
+----------------------------------------------------------------------------
+-- Convert from Celsius to Fahrenheit.
 -- Create a temperature in Fahrenheit from a temperature in Celsius.
--- Equations are from the source code for the US National Weather Service's online heat index calculator (http://www.hpc.ncep.noaa.gov/html/heatindex.shtml)
--- @usage celsius_to_fahrenheit(celsius, round)
+-- Equations are from the source code for the
+-- <a href="http://www.hpc.ncep.noaa.gov/html/heatindex.shtml">US National Weather Service's 
+-- online heat index calculator</a>.
+-- @usage celsius_to_fahrenheit(celsius, digits)
 -- @param celsius a temperature value in Celsius
 -- @param digits number of digits to round converted value (defaults to 2)
 -- @return a temperature in Fahrenheit from a temperature in Celsius
 -- @see fahrenheit_to_celsius
--- @author Brooke Anderson and Roger Peng
+
 function celsius_to_fahrenheit(celsius, digits) 
   return round((9/5) * celsius + 32, digits or 2)
 end
 
---- Create a relative humidity value from air temperature and dew point temperature values.
+----------------------------------------------------------------------------
+-- Create a relative humidity value from air temperature and dew point temperature values.
 -- Dew point temperature and temperature must be in the same metric (i.e., either both in 
--- Celsius or both in Fahrenheit). If necessary, use 'fahrenheit_to_celsius' or 
--- 'celsius_to_fahrenheit' to convert before using this function.
--- Equations are from the source code for the US National Weather Service's online heat index calculator (http://www.hpc.ncep.noaa.gov/html/heatindex.shtml
+-- Celsius or both in Fahrenheit). If necessary, use <code>fahrenheit_to_celsius</code> or 
+-- <code>celsius_to_fahrenheit</code> to convert before using this function.
+-- Equations are from the source code for the 
+-- <a href="http://www.hpc.ncep.noaa.gov/html/heatindex.shtml">US National Weather Service's 
+-- online heat index calculator</a>.
 -- @usage dewpoint_to_humidity(dp, t, temperature_metric)
 -- @param dp dew point temperature
 -- @param t air temperature
--- @param temperature_metric temperature metric for both air temperature and dew point temperature, possible values: FAHRENHEIT or CELSIUS (defaults to FAHRENHEIT)
+-- @param temperature_metric temperature metric for both air temperature and dew point 
+-- temperature, possible values: <code>FAHRENHEIT</code> or <code>CELSIUS</code> 
+-- (defaults to <code>FAHRENHEIT</code>)
 -- @return relative humidity (in %)
--- @author Brooke Anderson and Roger Peng
--- @seealso fahrenheit_to_celsius 
--- @seealso celsius_to_fahrenheit
--- @seealso humidity_to_dewpoint
+-- @return if the first return value is <code>nil</code>, the second return value contains
+-- a message explaining why
+-- @see fahrenheit_to_celsius 
+-- @see celsius_to_fahrenheit
+-- @see humidity_to_dewpoint
+
 function dewpoint_to_humidity(dp, t, temperature_metric) 
   temperature_metric = temperature_metric or FAHRENHEIT
 
@@ -55,15 +87,18 @@ function dewpoint_to_humidity(dp, t, temperature_metric)
   return 100 * ((112 - (0.1 * t) + dp)/(112 + (0.9 * t)))^8
 end
 
---- Convert from Fahrenheit to Celsius.
+----------------------------------------------------------------------------
+-- Convert from Fahrenheit to Celsius.
 -- Create a temperature in Celsius from a temperature in Fahrenheit.
--- Equations are from the source code for the US National Weather Service's online heat index calculator (http://www.hpc.ncep.noaa.gov/html/heatindex.shtml)
+-- Equations are from the source code for the
+-- <a href="http://www.hpc.ncep.noaa.gov/html/heatindex.shtml">US National Weather Service's 
+-- online heat index calculator</a>.
 -- @usage fahrenheit_to_celsius(fahrenheit, round)
 -- @param fahrenheit a temperature value in Fahrenheit
 -- @param digits number of digits to round converted value (defaults to 2)
 -- @return a temperature in Celsius from a temperature in Fahrenheit
 -- @see celsius_to_fahrenheit
--- @author Brooke Anderson and Roger Peng
+
 function fahrenheit_to_celsius(fahrenheit, digits) 
     return round((5/9) * (fahrenheit - 32), digits or 2)
 end
@@ -98,11 +133,12 @@ local function heat_index_algorithm(t, rh)
   end
 end
 
---- Calculate heat index.
+----------------------------------------------------------------------------
+-- Calculate heat index.
 -- Create a heat index value from air temperature and either 
 -- relative humidity or dew point temperature values.
--- Include air temperature ('t') and either dew point temperature ('dp') or relative 
--- humdity ('rh'). You cannot specify both dew point temperature and relative humidity- 
+-- Include air temperature <code>t</code>  and either dew point temperature <code>dp</code>  or relative 
+-- humdity <code>rh</code> . You cannot specify both dew point temperature and relative humidity- 
 -- this will return an error. Heat index is calculated as nil when impossible values of 
 -- dew point temperature or humidity are inputted (e.g., humidity above 100% or below 0%, 
 -- dew point temperature above air temperature).
@@ -110,11 +146,17 @@ end
 -- @param t air temperature
 -- @param dp dew point temperature
 -- @param rh relative humidity (in %)
--- @param temperature_metric temperature metric for air temperature and, if you're using it, dew point temperature; value can be either FAHRENHEIT or CELSIUS
--- @param output_metric metric heat index should be calculated in, either FAHRENHEIT or CELSIUS
+-- @param temperature_metric temperature metric for air temperature and, if you're using it,
+-- dew point temperature; value can be either <code>FAHRENHEIT</code> or <code>CELSIUS</code>
+-- @param output_metric metric heat index should be calculated in, either 
+-- <code>FAHRENHEIT</code> or <code>CELSIUS</code>
 -- @param digits the number of digits to round the heat index to
--- @return A heat index value in the metric specified by 'output_metric' (if 'output_metric' is not specified, heat index will be returned in the same metric in which air temperature was input, specified by 'temperature_metric')
--- @author Brooke Anderson and Roger Peng
+-- @return A heat index value in the metric specified by <code>output_metric</code> 
+-- (if <code>output_metric</code> is not specified, heat index will be returned in the same 
+-- metric in which air temperature was input, specified by <code>temperature_metric</code>)
+-- @return if the heat index value is <code>nil</code>, the second return value will be a
+-- message explaining why.
+
 function heat_index(t, dp, rh, temperature_metric, output_metric, digits) 
   output_metric = output_metric or temperature_metric
 
@@ -146,18 +188,26 @@ function heat_index(t, dp, rh, temperature_metric, output_metric, digits)
   return hi
 end
 
---- Calculate dew point temperature.
+----------------------------------------------------------------------------
+-- Calculate dew point temperature.
 -- Create a dew point temperature from air temperature and relative humidity.
 -- Dew point temperature will be calculated in the same metric as the temperature
--- (as specified by the 'temperature_metric' option). If you'd like dew point 
--- temperature in a different metric, use the function 'celsius_to_fahrenheit' or 
--- 'fahrenheit_to_celsius' on the output from this function.
--- @usage humidity.to.dewpoint(t, rh, temperature_metric)
+-- (as specified by the <code>temperature_metric</code> option). If you'd like dew point 
+-- temperature in a different metric, use the function <code>celsius_to_fahrenheit</code> or 
+-- <code>fahrenheit_to_celsius</code> on the output from this function.
+-- @usage humidity_to_dewpoint(t, rh, temperature_metric)
 -- @param t air temperature
 -- @param rh vector of relative humidity (in %)
--- @param temperature_metric temperature metric for air temperature, either FAHRENHEIT or CELSIUS
--- @author Brooke Anderson and Roger Peng
-function humidity_to_dewpoint(t, rh, temperature_metric) 
+-- @param temperature_metric temperature metric for air temperature, either <code>FAHRENHEIT</code>
+--        or <code>CELSIUS</code> (defaults to <code>FAHRENHEIT</code>)
+-- @return the dew point temperatre
+-- @return if the first return value is <code>nil</code>, the second return value contains a message
+-- explaining why.
+-- @see fahrenheit_to_celsius 
+-- @see celsius_to_fahrenheit
+
+function humidity_to_dewpoint(t, rh, temperature_metric)
+  temperature_metric = temperature_metric or FAHRENHEIT
   if temperature_metric ~= CELSIUS and temperature_metric ~= FAHRENHEIT then
     return nil, "The 'temperature_metric' option can only by CELSIUS or FAHRENHEIT."
   elseif rh < 0 or rh > 100 then
